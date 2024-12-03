@@ -1,0 +1,57 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Room {
+  id             String         @id @default(uuid())
+  createdAt      DateTime       @default(now()) @map("created_at")
+  gridSize       Int            @map("grid_size")
+  status         String         @default("waiting")
+  createdBy      String         @map("created_by")
+  currentTurn    String?        @map("current_turn")
+  winnerId       String?        @map("winner_id")
+  players        Player[]
+  activePlayers  ActivePlayer[]
+  matchedPairs   String[]
+  flippedIndices Int[]
+  cards          String[]
+  name           String         @default("New Room")
+
+  @@map("rooms")
+}
+
+model ActivePlayer {
+  id             String  @id @default(uuid())
+  roomId         String  @map("room_id")
+  playerId       String  @map("player_id")
+  isActive       Boolean @default(true)
+  score          Int     @default(0)
+  scrollPosition Json?   @default("{\"x\": 0, \"y\": 0}")
+  rooms          Room?   @relation(fields: [roomId], references: [id])
+  player         Player? @relation(fields: [playerId], references: [id])
+
+  @@index([playerId, roomId])
+  @@map("active_players")
+}
+
+model Player {
+  id           String         @id @default(uuid())
+  name         String
+  createdAt    DateTime       @default(now()) @map("created_at")
+  room         Room[]
+  ActivePlayer ActivePlayer[]
+
+  @@map("players")
+}
