@@ -1,12 +1,11 @@
-name: 🚀 Validation Pipeline
+name: CI
 concurrency:
   group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
 on:
-  push:
-    branches: [main]
   pull_request:
-    branches: [main]
+
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
   FLY_ORG: ${{ vars.FLY_ORG }}
@@ -38,9 +37,8 @@ jobs:
           node-version-file: "package.json"
           cache: "pnpm"
       - run: pnpm install --prefer-offline --frozen-lockfile
-      # - run: pnpm run typecheck
-      - run: |
-          echo "Type Checks are disabled ✅"
+      #- run: pnpm run typecheck
+      - run: echo "Type Checks are disabled ✅"
 
   vitest:
     needs: typecheck
