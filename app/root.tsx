@@ -1,3 +1,7 @@
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 import { useTranslation } from "react-i18next"
 import {
 	Form,
@@ -16,7 +20,8 @@ import type { Route } from "./+types/root"
 import { getUserFromRequest } from "./queries/user.server"
 import { commitServerSession, getServerSession } from "./session.server"
 import tailwindcss from "./tailwind.css?url"
-
+// Create a client
+export const queryClient = new QueryClient()
 export async function loader({ context, request }: Route.LoaderArgs) {
 	const { lang, clientEnv } = context
 	const player = await getUserFromRequest(request)
@@ -75,7 +80,9 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 				<Links />
 			</head>
 			<body className="w-full h-full">
-				{children}
+				<QueryClientProvider client={queryClient}>
+					{children}
+				</QueryClientProvider>
 				<ScrollRestoration />
 				<Scripts />
 			</body>
