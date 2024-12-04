@@ -1,4 +1,4 @@
-primary_region = 'ams'
+primary_region = 'fra'
 kill_signal    = "SIGINT"
 kill_timeout   = 5
 

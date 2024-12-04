@@ -67,6 +67,8 @@ jobs:
     uses: forge42dev/workflows/.github/workflows/deploy-to-fly.yaml@monorepo-matrix
     with:
       github_environment: "pr-preview"
+      fly_app_name: f42-memory-game-pr-${{ github.event.number }}
+      fly_config_file_path: fly.staging.toml
     secrets:
       fly_api_token: ${{ secrets.FLY_API_TOKEN }}
       fly_secrets: |
