@@ -1,4 +1,4 @@
-name: Destroy PR Preview
+name: 🧹 Destroy PR Preview
 
 concurrency:
   group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
