@@ -22,7 +22,7 @@
 		"test": "vitest run",
 		"test:ui": "vitest --ui --api 9527",
 		"test:cov": "vitest run --coverage",
-		"typecheck": "tsc",
+		"typecheck": "react-router typegen && tsc",
 		"validate": "pnpm run check && pnpm run typecheck && pnpm run test && pnpm run check:unused",
 		"check": "biome check .",
 		"check:fix": "biome check --fix .",
@@ -38,6 +38,7 @@
 		"@prisma/client": "6.0.1",
 		"@react-router/node": "7.0.1",
 		"@supabase/supabase-js": "2.39.3",
+		"@tanstack/react-query": "5.62.2",
 		"clsx": "2.1.1",
 		"hono": "4.6.12",
 		"i18next": "23.15.2",
@@ -86,7 +87,7 @@
 	},
 	"engines": {
 		"node": ">=v22.11.0",
-		"pnpm": ">=9.14.4"
+		"pnpm": ">=9.14.2"
 	},
-	"packageManager": "pnpm@9.14.4"
+	"packageManager": "pnpm@9.14.2"
 }
