@@ -18,7 +18,8 @@ export const handlePlayerUpdate =
 		const data = queryClient.getQueryData<RoomLoaderData>(["room", roomId])!
 		if (!data.players.find((p) => p.playerId === newItem.player_id)) {
 			const data = await serverLoader()
-			queryClient.setQueryData(["room", roomId], data)
+
+			return queryClient.setQueryData(["room", roomId], data)
 		}
 		queryClient.setQueryData<typeof data>(["room", roomId], {
 			...data,
