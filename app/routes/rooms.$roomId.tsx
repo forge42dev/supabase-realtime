@@ -77,6 +77,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 	return redirect("/")
 }
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 const realtime = (roomId: string, serverLoader: any) => {
 	// Subscribe to real-time updates on the room
 	const roomSubscription = supabase
@@ -93,6 +94,7 @@ const realtime = (roomId: string, serverLoader: any) => {
 		)
 		.subscribe()
 	return {
+		test: "",
 		[Symbol.dispose]() {
 			playerSubscription.unsubscribe()
 			roomSubscription.unsubscribe()
@@ -110,7 +112,7 @@ export const clientLoader = async ({ serverLoader, params }: Route.ClientLoaderA
 		queryClient.setQueryData(["room", params.roomId], data)
 	}
 
-	using a = realtime(params.roomId, serverLoader)
+	using _a = realtime(params.roomId, serverLoader)
 
 	return {
 		...data,

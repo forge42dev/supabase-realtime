@@ -1,4 +1,4 @@
 {
 	"presets": ["@babel/preset-typescript"],
-	"plugins": ["@babel/plugin-proposal-explicit-resource-management"]
+	"plugins": ["@babel/plugin-proposal-explicit-resource-management", "babel-plugin-react-compiler"]
 }

@@ -4,7 +4,6 @@ import { z } from "zod"
 import { db } from "~/db.server"
 import { getUserFromRequest } from "~/queries/user.server"
 import { generateEmojiPairs } from "~/utils/emoji"
-import { supabase } from "~/utils/supabase"
 import type { Route } from "./+types/_index"
 
 export async function loader() {
@@ -83,7 +82,7 @@ export async function action({ request }: Route.ActionArgs) {
 }
 export default function Index() {
 	const { rooms } = useLoaderData<typeof loader>()
-	console.log(supabase.getChannels())
+
 	return (
 		<div className="min-h-screen bg-gray-100 p-8">
 			<div className="mx-auto max-w-2xl">

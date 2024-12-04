@@ -4,15 +4,13 @@ import { reactRouterHonoServer } from "react-router-hono-server/dev"
 import { defineConfig } from "vite"
 import babel from "vite-plugin-babel"
 import { iconsSpritesheet } from "vite-plugin-icons-spritesheet"
-import inspect from "vite-plugin-inspect"
 import tsconfigPaths from "vite-tsconfig-paths"
 
 export default defineConfig({
 	plugins: [
-		inspect(),
 		babel({
 			include: ["./app/**/*"],
-			filter: name =>  name.endsWith("tsx"),
+			filter: (name) => name.endsWith("tsx"),
 		}),
 		reactRouterDevTools(),
 		reactRouter(),
