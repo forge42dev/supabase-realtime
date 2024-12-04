@@ -52,3 +52,19 @@ jobs:
         # Only works if you set `reportOnFailure: true` in your vite config as specified above
         if: always()
         uses: davelosert/vitest-coverage-report-action@v2
+
+
+  deploy-preview:
+    name: "🚀 Deploy Preview"
+    needs: [lint, typecheck, vitest]
+    uses: forge42dev/workflows/.github/workflows/deploy-to-fly.yaml@monorepo-matrix
+    with:
+      github_environment: "pr-preview"
+    secrets:
+      fly_api_token: ${{ secrets.FLY_API_TOKEN }}
+      fly_secrets: |
+        SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}
+        DATABASE_URL=${{ secrets.DATABASE_URL }}
+        DIRECT_URL=${{ secrets.DIRECT_URL }}
+        SESSION_SECRET=${{ secrets.SESSION_SECRET }}
