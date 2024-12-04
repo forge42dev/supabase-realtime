@@ -7,7 +7,8 @@
 		"clean": "git clean -fdX --exclude=\"!.env\"",
 		"script": "tsx scripts/setup.ts",
 		"cleanup": "pnpm run script scripts/cleanup.ts",
-		"build": "react-router build",
+		"build": "NODE_ENV=production react-router build",
+		"predev": "pnpm run typegen",
 		"dev": "react-router dev",
 		"db:pull": "prisma db pull",
 		"db:push": "prisma db push",
@@ -28,11 +29,13 @@
 		"check:unused": "knip --max-issues 1",
 		"check:unused:fix": "knip --fix",
 		"typegen": "react-router typegen",
-		"postinstall": "pnpm run typegen"
+		"generate-env": "pnpm run generate-env:good-os",
+		"generate-env:good-os": "APP_DEPLOYMENT_ENV=${APP_DEPLOYMENT_ENV:=development} op inject -i .env.example -o .env",
+		"generate-env:windows": "APP_DEPLOYMENT_ENV=development op inject -i .env.example -o .env"
 	},
 	"dependencies": {
 		"@forge42/seo-tools": "1.3.0",
-		"@prisma/client": "6.0.0",
+		"@prisma/client": "6.0.1",
 		"@react-router/node": "7.0.1",
 		"@supabase/supabase-js": "2.39.3",
 		"@tanstack/react-query": "5.62.2",
@@ -71,7 +74,7 @@
 		"knip": "5.37.2",
 		"lefthook": "1.8.4",
 		"postcss": "8.4.49",
-		"prisma": "6.0.0",
+		"prisma": "6.0.1",
 		"prompt": "1.3.0",
 		"react-router-devtools": "1.0.3",
 		"tailwindcss": "3.4.15",
@@ -83,7 +86,8 @@
 		"vitest": "2.1.5"
 	},
 	"engines": {
-		"node": ">=22.11.0",
+		"node": ">=v22.11.0",
 		"pnpm": ">=9.14.2"
-	}
+	},
+	"packageManager": "pnpm@9.14.2"
 }
