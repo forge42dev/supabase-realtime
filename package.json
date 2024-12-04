@@ -7,7 +7,7 @@
 		"clean": "git clean -fdX --exclude=\"!.env\"",
 		"script": "tsx scripts/setup.ts",
 		"cleanup": "pnpm run script scripts/cleanup.ts",
-		"build": "react-router build",
+		"build": "NODE_ENV=production react-router build",
 		"dev": "react-router dev",
 		"db:pull": "prisma db pull",
 		"db:push": "prisma db push",
@@ -28,7 +28,10 @@
 		"check:unused": "knip --max-issues 1",
 		"check:unused:fix": "knip --fix",
 		"typegen": "react-router typegen",
-		"postinstall": "pnpm run typegen"
+		"postinstall": "pnpm run typegen",
+		"generate-env": "pnpm run generate-env:good-os",
+		"generate-env:good-os": "APP_DEPLOYMENT_ENV=${APP_DEPLOYMENT_ENV:=development} op inject -i .env.example -o .env",
+		"generate-env:windows": "APP_DEPLOYMENT_ENV=development op inject -i .env.example -o .env"
 	},
 	"dependencies": {
 		"@forge42/seo-tools": "1.3.0",
