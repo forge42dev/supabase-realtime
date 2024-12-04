@@ -1,4 +1,4 @@
-name: CI
+name: 🤖 CI
 concurrency:
   group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
