@@ -14,13 +14,9 @@ ENV NODE_ENV="production"
 ARG PNPM_VERSION=9.14.4
 RUN npm install -g pnpm@$PNPM_VERSION
 
-
-# Throw-away build stage to reduce size of final image
-FROM base AS build
-
 # Install packages needed to build node modules
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3 git jq openssl
+    apt-get install -y ca-certificates openssl
 
 # Install node modules
 COPY .npmrc package.json pnpm-lock.yaml ./
@@ -29,19 +25,16 @@ RUN pnpm install --frozen-lockfile --prod=false
 # Copy application code
 COPY . .
 
+RUN pnpm prisma generate
+
 # Build application
 RUN pnpm run build
-
-RUN pnpm prisma generate
 
 # Remove development dependencies
 RUN pnpm prune --prod
 
-# Final stage for app image
-FROM base
-
 # Copy built application
-COPY --from=build /app /app
+COPY /app /app
 
 ENV PORT="8080"
 EXPOSE $PORT
