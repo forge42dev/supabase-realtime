@@ -1,7 +1,4 @@
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { useTranslation } from "react-i18next"
 import {
 	Form,
@@ -80,9 +77,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
 				<Links />
 			</head>
 			<body className="w-full h-full">
-				<QueryClientProvider client={queryClient}>
-					{children}
-				</QueryClientProvider>
+				<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 				<ScrollRestoration />
 				<Scripts />
 			</body>

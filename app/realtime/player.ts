@@ -3,8 +3,7 @@ import { queryClient } from "~/root"
 import type { RoomLoaderData } from "~/routes/rooms.$roomId"
 
 export const handlePlayerUpdate =
-	(roomId: string, serverLoader: () => Promise<RoomLoaderData>) =>
-	async (payload: RealtimeMessage["payload"]) => {
+	(roomId: string, serverLoader: () => Promise<RoomLoaderData>) => async (payload: RealtimeMessage["payload"]) => {
 		const newItem = payload.new as {
 			player_id: string
 			isActive: boolean
@@ -15,8 +14,8 @@ export const handlePlayerUpdate =
 				y: number
 			}
 		}
-// biome-ignore lint/style/noNonNullAssertion: This will be there
-const data = queryClient.getQueryData<RoomLoaderData>(["room", roomId])!
+		// biome-ignore lint/style/noNonNullAssertion: This will be there
+		const data = queryClient.getQueryData<RoomLoaderData>(["room", roomId])!
 		if (!data.players.find((p) => p.playerId === newItem.player_id)) {
 			const data = await serverLoader()
 			queryClient.setQueryData(["room", roomId], data)

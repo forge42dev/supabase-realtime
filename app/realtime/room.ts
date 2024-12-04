@@ -6,7 +6,7 @@ export const handleRoomUpdate = (roomId: string) => (payload: RealtimeMessage["p
 	const newRoomInfo = payload.new
 	// biome-ignore lint/style/noNonNullAssertion: This will be there
 	const data = queryClient.getQueryData<RoomLoaderData>(["room", roomId])!
-	if(payload.new.id !== data.room.id) return
+	if (payload.new.id !== data.room.id) return
 	queryClient.setQueryData<typeof data>(["room", data.room.id], {
 		...data,
 		room: {
