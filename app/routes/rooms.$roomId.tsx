@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
 import { QRCodeSVG } from "qrcode.react"
-import { useEffect } from "react"
 import { type LoaderFunctionArgs, redirect, useSubmit } from "react-router"
 import { Grid } from "~/components/game/Grid"
 import { Leaderboard } from "~/components/game/Leaderboard"
@@ -78,6 +77,29 @@ export const action = async ({ request }: Route.ActionArgs) => {
 	return redirect("/")
 }
 
+const realtime = (roomId: string, serverLoader: any) => {
+	// Subscribe to real-time updates on the room
+	const roomSubscription = supabase
+		.channel("rooms")
+		.on("postgres_changes", { event: "*", schema: "public", table: "rooms" }, handleRoomUpdate(roomId))
+		.subscribe()
+	// Subscribe to real-time updates on the active players
+	const playerSubscription = supabase
+		.channel("active_players")
+		.on(
+			"postgres_changes",
+			{ event: "*", schema: "public", table: "active_players" },
+			handlePlayerUpdate(roomId, serverLoader)
+		)
+		.subscribe()
+	return {
+		[Symbol.dispose]() {
+			playerSubscription.unsubscribe()
+			roomSubscription.unsubscribe()
+		},
+	}
+}
+
 export const clientLoader = async ({ serverLoader, params }: Route.ClientLoaderArgs) => {
 	// Try to get the data from the cache
 	const cachedData = queryClient.getQueryData<RoomLoaderData>(["room", params.roomId])
@@ -87,28 +109,11 @@ export const clientLoader = async ({ serverLoader, params }: Route.ClientLoaderA
 	if (!cachedData) {
 		queryClient.setQueryData(["room", params.roomId], data)
 	}
-	// Subscribe to real-time updates on the room
-	const roomSubscription = supabase
-		.channel("rooms")
-		.on("postgres_changes", { event: "*", schema: "public", table: "rooms" }, handleRoomUpdate(params.roomId))
-		.subscribe()
-	// Subscribe to real-time updates on the active players
-	const playerSubscription = supabase
-		.channel("active_players")
-		.on(
-			"postgres_changes",
-			{ event: "*", schema: "public", table: "active_players" },
-			handlePlayerUpdate(params.roomId, serverLoader)
-		)
-		.subscribe()
 
-	const unsubscribe = () => {
-		roomSubscription.unsubscribe()
-		playerSubscription.unsubscribe()
-	}
+	using a = realtime(params.roomId, serverLoader)
+
 	return {
 		...data,
-		unsubscribe,
 	}
 }
 
@@ -118,14 +123,7 @@ export default function Room({ loaderData, params }: Route.ComponentProps) {
 	const { room, cards, user, qrCode } = loaderData
 	const submit = useSubmit()
 	const { data } = useQuery<Route.ComponentProps["loaderData"]>({ queryKey: ["room", params.roomId] })
-	// Close the channels when the user leaves the page
-	useEffect(() => {
-		return () => {
-			if ("unsubscribe" in loaderData) {
-				loaderData.unsubscribe()
-			}
-		}
-	}, [loaderData])
+
 	if (!data) return <div>Loading...</div>
 	const activeRoom = data.room
 	const activePlayers = data.players
