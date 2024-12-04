@@ -1,0 +1,32 @@
+name: 👀 Branch Preview
+concurrency:
+  group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [main] # Delete this line to enable deployment of all created branches. Note: you already have PR preview deploys!
+
+  workflow_dispatch:
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  FLY_ORG: ${{ vars.FLY_ORG }}
+  FLY_REGION: ${{ vars.FLY_REGION }}
+
+jobs:
+  deploy-branch-preview:
+    name: "🚀 Deploy Preview"
+    uses: forge42dev/workflows/.github/workflows/deploy-to-fly.yaml@monorepo-matrix
+    with:
+      fly_app_name: f42-memory-game-branch-${{ github.ref_name }}
+      fly_config_file_path: fly.staging.toml
+      github_environment: "branch-preview"
+    secrets:
+      fly_api_token: ${{ secrets.FLY_API_TOKEN }}
+      fly_secrets: |
+        SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY=${{ secrets.SUPABASE_KEY }}
+        DATABASE_URL=${{ secrets.DATABASE_URL }}
+        DIRECT_URL=${{ secrets.DIRECT_URL }}
+        SESSION_SECRET=${{ secrets.SESSION_SECRET }}

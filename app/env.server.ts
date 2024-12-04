@@ -1,13 +1,13 @@
 import { z } from "zod"
 
 const envSchema = z.object({
-	NODE_ENV: z.enum(["development", "production", "test"]),
-	APP_DEPLOYMENT_ENV: z.enum(["staging", "production"]),
-	SUPABASE_URL: z.string().url(),
-	SUPABASE_KEY: z.string(),
-	DATABASE_URL: z.string(),
-	DIRECT_URL: z.string(),
-	SESSION_SECRET: z.string(),
+	NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+	APP_DEPLOYMENT_ENV: z.enum(["development", "staging", "production"]).default("development"),
+	SUPABASE_URL: z.string().min(1).url(),
+	SUPABASE_KEY: z.string().min(1),
+	DATABASE_URL: z.string().min(1),
+	DIRECT_URL: z.string().min(1),
+	SESSION_SECRET: z.string().min(1).default("i:4m*n0t+aT!4ll;a#S3crEt"),
 })
 
 type APP_ENV = z.infer<typeof envSchema>
