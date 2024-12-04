@@ -22,7 +22,7 @@
 		"test": "vitest run",
 		"test:ui": "vitest --ui --api 9527",
 		"test:cov": "vitest run --coverage",
-		"typecheck": "tsc",
+		"typecheck": "react-router typegen && tsc",
 		"validate": "pnpm run check && pnpm run typecheck && pnpm run test && pnpm run check:unused",
 		"check": "biome check .",
 		"check:fix": "biome check --fix .",
